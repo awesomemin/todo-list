@@ -1,8 +1,9 @@
 package com.example.todo_list.controller;
 
 import com.example.todo_list.domain.Todo;
-import com.example.todo_list.repository.TodoRepository;
+import com.example.todo_list.service.TodoService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,25 +12,29 @@ import java.util.List;
 @RestController
 public class HelloController {
 
-    public final TodoRepository todoRepository;
+    public final TodoService todoService;
 
-    public HelloController(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
+    public HelloController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
     @GetMapping("/hello")
     public String sayHello() {
-        return "Hello, Spring Boot!";
+        return todoService.getHello();
     }
 
     @GetMapping("/add")
     public String addTodo(@RequestParam("title") String title) {
-        todoRepository.save(title);
-        return "저장 성공! 내용: " + title;
+        return todoService.addTodo(title);
     }
 
     @GetMapping("/list")
     public List<Todo> getTodoList() {
-        return todoRepository.findAll();
+        return todoService.getTodoList();
+    }
+
+    @GetMapping("/done/{id}")
+    public boolean checkDone(@PathVariable Long id) {
+        return todoService.checkDone(id);
     }
 }

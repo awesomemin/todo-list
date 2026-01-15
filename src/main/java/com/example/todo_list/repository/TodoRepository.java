@@ -30,4 +30,10 @@ public class TodoRepository {
 
         return jdbcTemplate.query(sql, todoRowMapper);
     }
+
+    public boolean checkDone(Long id) {
+        String sql = "SELECT done FROM todo WHERE id = ?";
+        Boolean isDone = jdbcTemplate.queryForObject(sql, Boolean.class, id);
+        return isDone != null && isDone;
+    }
 }
